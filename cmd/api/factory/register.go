@@ -3,12 +3,25 @@ package factory
 import (
 	"reflect"
 
+	"github.com/NiltonMorais/event-driven-golang/internal/application/handler"
 	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
 )
 
 func RegisterHandlers(app *Application) {
-	app.queue.Register(reflect.TypeOf(event.UserRegisteredEvent{}), app.sendWelcomeEmailHandler.Execute)
-	app.queue.Register(reflect.TypeOf(event.OrderCreatedEvent{}), app.processOrderPaymentHandler.Execute)
-	app.queue.Register(reflect.TypeOf(event.OrderCreatedEvent{}), app.stockMovementHandller.Execute)
-	app.queue.Register(reflect.TypeOf(event.OrderCreatedEvent{}), app.sendOrderEmailHandler.Execute)
+	var list map[reflect.Type][]handler.Handler = map[reflect.Type][]handler.Handler{
+		reflect.TypeOf(event.UserRegisteredEvent{}): {
+			app.sendWelcomeEmailHandler,
+		},
+		reflect.TypeOf(event.OrderCreatedEvent{}): {
+			app.processOrderPaymentHandler,
+			app.stockMovementHandller,
+			app.sendOrderEmailHandler,
+		},
+	}
+
+	for eventType, handlers := range list {
+		for _, handler := range handlers {
+			app.queue.Register(eventType, handler.Execute)
+		}
+	}
 }
