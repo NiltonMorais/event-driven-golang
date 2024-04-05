@@ -1,0 +1,25 @@
+### CREATE USER 
+POST http://localhost:8080/create-user HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Nilton Morais",
+    "email": "nilton@gmail.com"
+}
+
+### CREATE ORDER 
+POST http://localhost:8080/create-order HTTP/1.1
+content-type: application/json
+
+{
+    "products": [
+        {
+            "id": 1,
+            "qtd": 2
+        },
+        {
+            "id": 2,
+            "qtd": 1
+        }
+    ],
+}
