@@ -122,7 +122,7 @@ func (r *RabbitMQAdapter) StartConsuming(ctx context.Context, queueName string) 
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Received a message: %s", d.Body)
+			log.Printf("Received a message: %s on queue: %s", d.Body, queueName)
 			hasError := false
 			for _, listener := range r.listeners[queueName] {
 				eventDomain := event.DomainEvent{

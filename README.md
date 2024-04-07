@@ -2,15 +2,15 @@
 Event Driven Architecture example in golang
 
 ## Running local
-- up infraescructure local with docker (rabbitmq, etc)
-    ```sh
-    make up
-    ```
 - run server
     ```sh
     make server
     ```
-- run consumers
+
+- up infraescructure local with docker (rabbitmq, etc)
+    ```sh
+    make up
     ```
-    make consumer
-    ```
+
+## Debugging    
+- Access "Run and Debug" on VsCode and click in play "Server"
