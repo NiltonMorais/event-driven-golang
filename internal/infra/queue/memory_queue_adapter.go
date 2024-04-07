@@ -56,7 +56,7 @@ func (eb *MemoryQueueAdapter) Disconnect(ctx context.Context) error {
 	return nil
 }
 
-func (eb *MemoryQueueAdapter) StartConsuming(ctx context.Context) error {
-	log.Println("--- MemoryQueueAdapter StartConsuming ---")
+func (eb *MemoryQueueAdapter) StartConsuming(ctx context.Context, queueName string) error {
+	log.Printf("--- MemoryQueueAdapter StartConsuming queue %s ---", queueName)
 	return nil
 }

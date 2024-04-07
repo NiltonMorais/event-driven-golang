@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"os"
 	"reflect"
 
 	"github.com/NiltonMorais/event-driven-golang/internal/application/controller"
@@ -26,9 +25,9 @@ type Application struct {
 }
 
 func NewApplication() (*Application, error) {
-	//queue := infraQueue.NewMemoryQueueAdapter()
-	queueUri := os.Getenv("QUEUE_URI")
-	queue := infraQueue.NewRabbitMQAdapter(queueUri)
+	queue := infraQueue.NewMemoryQueueAdapter()
+	// queueUri := os.Getenv("QUEUE_URI")
+	// queue := infraQueue.NewRabbitMQAdapter(queueUri)
 
 	sendWelcomeEmailHandler := handler.NewSendWelcomeEmailHandler(queue)
 	processOrderPaymentHandler := handler.NewProcessOrderPaymentHandler()
