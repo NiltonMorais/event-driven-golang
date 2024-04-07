@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 	"reflect"
 
 	"github.com/NiltonMorais/event-driven-golang/internal/application/controller"
-	"github.com/NiltonMorais/event-driven-golang/internal/application/handler"
 	"github.com/NiltonMorais/event-driven-golang/internal/application/usecase"
 	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
 	"github.com/NiltonMorais/event-driven-golang/internal/domain/queue"
@@ -15,39 +15,30 @@ import (
 )
 
 type Application struct {
-	queue                      queue.Queue
-	userController             *controller.UserController
-	orderController            *controller.OrderController
-	sendWelcomeEmailHandler    *handler.SendWelcomeEmailHandler
-	processOrderPaymentHandler *handler.ProcessOrderPaymentHandler
-	stockMovementHandller      *handler.StockMovementHandler
-	sendOrderEmailHandler      *handler.SendOrderEmailHandler
+	queue           queue.Queue
+	userController  *controller.UserController
+	orderController *controller.OrderController
 }
 
 func NewApplication() (*Application, error) {
-	queue := infraQueue.NewMemoryQueueAdapter()
-	// queueUri := os.Getenv("QUEUE_URI")
-	// queue := infraQueue.NewRabbitMQAdapter(queueUri)
-
-	sendWelcomeEmailHandler := handler.NewSendWelcomeEmailHandler(queue)
-	processOrderPaymentHandler := handler.NewProcessOrderPaymentHandler()
-	stockMovementHandller := handler.NewStockMovementHandler()
-	sendOrderEmailHandler := handler.NewSendOrderEmailHandler()
+	// queue := infraQueue.NewMemoryQueueAdapter()
+	queueUri := os.Getenv("QUEUE_URI")
+	queue := infraQueue.NewRabbitMQAdapter(queueUri)
 
 	createUserUseCase := usecase.NewCreateUserUseCase(queue)
-	userController := controller.NewUserController(createUserUseCase)
+	sendWelcomeEmailUseCase := usecase.NewSendWelcomeEmailUseCase(queue)
+	userController := controller.NewUserController(createUserUseCase, sendWelcomeEmailUseCase)
 
 	createOrderUseCase := usecase.NewCreateOrderUseCase(queue)
-	orderController := controller.NewOrderController(createOrderUseCase)
+	processOrderPaymentUseCase := usecase.NewProcessOrderPaymentUseCase()
+	stockMovementUseCase := usecase.NewStockMovementUseCase()
+	sendOrderEmailUseCase := usecase.NewSendOrderEmailUseCase()
+	orderController := controller.NewOrderController(createOrderUseCase, processOrderPaymentUseCase, stockMovementUseCase, sendOrderEmailUseCase)
 
 	return &Application{
-		queue:                      queue,
-		userController:             userController,
-		orderController:            orderController,
-		sendWelcomeEmailHandler:    sendWelcomeEmailHandler,
-		processOrderPaymentHandler: processOrderPaymentHandler,
-		stockMovementHandller:      stockMovementHandller,
-		sendOrderEmailHandler:      sendOrderEmailHandler,
+		queue:           queue,
+		userController:  userController,
+		orderController: orderController,
 	}, nil
 }
 

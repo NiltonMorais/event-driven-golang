@@ -1,13 +1,11 @@
 package queue
 
 import (
-	"context"
+	"net/http"
 	"reflect"
-
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
 )
 
 type Listener struct {
 	eventType reflect.Type
-	callback  func(ctx context.Context, e event.DomainEvent) error
+	callback  func(w http.ResponseWriter, r *http.Request)
 }

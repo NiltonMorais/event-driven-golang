@@ -13,7 +13,7 @@ func main() {
 		log.Fatalf("Error creating application: %s", err)
 	}
 	factory.ResgisterRoutes(app)
-	factory.RegisterHandlers(app)
+	factory.RegisterConsumers(app)
 
 	ctx := context.Background()
 

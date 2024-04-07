@@ -2,15 +2,14 @@ package queue
 
 import (
 	"context"
+	"net/http"
 	"reflect"
-
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
 )
 
 type Queue interface {
-	ListenerRegister(eventType reflect.Type, callback func(ctx context.Context, e event.DomainEvent) error)
+	ListenerRegister(eventType reflect.Type, handler func(w http.ResponseWriter, r *http.Request))
 	Connect(ctx context.Context) error
 	Disconnect(ctx context.Context) error
-	Publish(ctx context.Context, eventPayload interface{}) error
+	Publish(ctx context.Context, body interface{}) error
 	StartConsuming(ctx context.Context, queueName string) error
 }

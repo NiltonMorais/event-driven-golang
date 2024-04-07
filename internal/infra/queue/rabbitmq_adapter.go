@@ -1,14 +1,15 @@
 package queue
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"log"
+	"net/http"
 	"reflect"
 	"time"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -122,21 +123,26 @@ func (r *RabbitMQAdapter) StartConsuming(ctx context.Context, queueName string) 
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Received a message: %s on queue: %s", d.Body, queueName)
+			log.Printf("Received a message on queue %s: %s", queueName, d.Body)
 			hasError := false
 			for _, listener := range r.listeners[queueName] {
-				eventDomain := event.DomainEvent{
-					Date:    time.Now(),
-					Type:    listener.eventType,
-					Payload: d.Body,
-				}
-				err := listener.callback(ctx, eventDomain)
+				w := NewQueueResponseWriter()
+				body := bytes.NewBuffer(d.Body)
+				r, err := http.NewRequestWithContext(ctx, http.MethodPost, queueName, body)
 				if err != nil {
 					log.Printf("Error processing message: %s", err)
 					hasError = true
 					break
 				}
+
+				listener.callback(w, r)
+				if w.statusCode >= 400 {
+					log.Printf("Error processing message: %s", string(w.body))
+					hasError = true
+					break
+				}
 			}
+
 			if !hasError {
 				d.Ack(false)
 			}
@@ -149,6 +155,6 @@ func (r *RabbitMQAdapter) StartConsuming(ctx context.Context, queueName string) 
 	return nil
 }
 
-func (r *RabbitMQAdapter) ListenerRegister(eventType reflect.Type, callback func(ctx context.Context, e event.DomainEvent) error) {
-	r.listeners[eventType.Name()] = append(r.listeners[eventType.Name()], Listener{eventType, callback})
+func (r *RabbitMQAdapter) ListenerRegister(eventType reflect.Type, handler func(w http.ResponseWriter, r *http.Request)) {
+	r.listeners[eventType.Name()] = append(r.listeners[eventType.Name()], Listener{eventType, handler})
 }
