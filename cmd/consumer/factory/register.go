@@ -21,7 +21,7 @@ func RegisterHandlers(app *Application) {
 
 	for eventType, handlers := range list {
 		for _, handler := range handlers {
-			app.queue.Register(eventType, handler.Execute)
+			app.queue.ListenerRegister(eventType, handler.Execute)
 		}
 	}
 }

@@ -14,8 +14,12 @@ func NewSendOrderEmailHandler() *SendOrderEmailHandler {
 	return &SendOrderEmailHandler{}
 }
 
-func (h *SendOrderEmailHandler) Execute(ctx context.Context, e event.DomainEvent) {
-	payload := event.GetPayload[event.OrderCreatedEvent](e)
+func (h *SendOrderEmailHandler) Execute(ctx context.Context, e event.DomainEvent) error {
+	payload, err := event.GetPayload[event.OrderCreatedEvent](e)
+	if err != nil {
+		return err
+	}
 	fmt.Println("--- SendOrderEmailHandler ---")
-	fmt.Printf("--- MAIL Order Created: R$ %f \n", payload.Order.GetTotalPrice())
+	fmt.Printf("--- MAIL Order Created: R$ %f \n", payload.TotalPrice)
+	return nil
 }

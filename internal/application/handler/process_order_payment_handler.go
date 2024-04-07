@@ -14,8 +14,12 @@ func NewProcessOrderPaymentHandler() *ProcessOrderPaymentHandler {
 	return &ProcessOrderPaymentHandler{}
 }
 
-func (h *ProcessOrderPaymentHandler) Execute(ctx context.Context, e event.DomainEvent) {
-	payload := event.GetPayload[event.OrderCreatedEvent](e)
+func (h *ProcessOrderPaymentHandler) Execute(ctx context.Context, e event.DomainEvent) error {
+	payload, err := event.GetPayload[event.OrderCreatedEvent](e)
+	if err != nil {
+		return err
+	}
 	fmt.Println("--- ProcessOrderPaymentHandler ---")
-	fmt.Printf("Processado o pagamento de R$ %f \n", payload.Order.GetTotalPrice())
+	fmt.Printf("Processado o pagamento de R$ %f \n", payload.TotalPrice)
+	return nil
 }

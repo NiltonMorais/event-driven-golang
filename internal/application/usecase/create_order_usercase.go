@@ -36,6 +36,10 @@ func (u *CreateOrderUseCase) Execute(ctx context.Context, input dto.CreateOrderD
 	if err != nil {
 		return err
 	}
-	u.publisher.Publish(ctx, event.OrderCreatedEvent{Order: order})
+
+	err = u.publisher.Publish(ctx, event.NewOrderCreatedEvent(order))
+	if err != nil {
+		return err
+	}
 	return nil
 }

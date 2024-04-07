@@ -7,5 +7,5 @@ import (
 )
 
 type Handler interface {
-	Execute(ctx context.Context, e event.DomainEvent)
+	Execute(ctx context.Context, e event.DomainEvent) error
 }

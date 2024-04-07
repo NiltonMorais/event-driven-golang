@@ -1,8 +1,8 @@
 package main
 
 import (
+	"context"
 	"log"
-	"net/http"
 
 	"github.com/NiltonMorais/event-driven-golang/cmd/api/factory"
 )
@@ -12,8 +12,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error creating application: %s", err)
 	}
-	factory.RegisterHandlers(app)
 	factory.RouteApplication(app)
-	log.Println("Server is running on port 8080")
-	http.ListenAndServe(":8080", nil)
+
+	ctx := context.Background()
+	err = app.Run(ctx)
+	if err != nil {
+		log.Fatalf("Error running application: %s", err)
+	}
 }

@@ -2,12 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "GoLang",
+            "name": "Server",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "cmd/api/main.go",
             "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+        },
+        {
+            "name": "Consumer",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "cmd/consumer/main.go",
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
         }
     ]
 }

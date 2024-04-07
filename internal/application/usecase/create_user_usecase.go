@@ -30,6 +30,9 @@ func (u *CreateUserUseCase) Execute(ctx context.Context, name, email string) err
 		Name:  user.GetName(),
 		Email: user.GetEmail(),
 	}
-	u.publisher.Publish(ctx, event)
+	err = u.publisher.Publish(ctx, event)
+	if err != nil {
+		return err
+	}
 	return nil
 }

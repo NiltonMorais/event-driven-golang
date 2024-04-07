@@ -1,6 +1,7 @@
 package event
 
 import (
+	"encoding/json"
 	"reflect"
 	"time"
 )
@@ -8,9 +9,15 @@ import (
 type DomainEvent struct {
 	Type    reflect.Type
 	Date    time.Time
-	Payload interface{}
+	Payload []byte
 }
 
-func GetPayload[T any](e DomainEvent) T {
-	return e.Payload.(T)
+func GetPayload[T any](e DomainEvent) (*T, error) {
+	var payload T
+	err := json.Unmarshal(e.Payload, &payload)
+	if err != nil {
+		return nil, err
+	}
+
+	return &payload, nil
 }

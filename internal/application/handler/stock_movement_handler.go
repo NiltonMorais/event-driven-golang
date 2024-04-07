@@ -14,10 +14,14 @@ func NewStockMovementHandler() *StockMovementHandler {
 	return &StockMovementHandler{}
 }
 
-func (h *StockMovementHandler) Execute(ctx context.Context, e event.DomainEvent) {
-	payload := event.GetPayload[event.OrderCreatedEvent](e)
-	fmt.Println("--- StockMovimentHandler ---")
-	for _, item := range payload.Order.GetItems() {
-		fmt.Printf("Retirando do stock %d itens do produto: %s\n", item.GetQuantity(), item.GetProduct().GetName())
+func (h *StockMovementHandler) Execute(ctx context.Context, e event.DomainEvent) error {
+	payload, err := event.GetPayload[event.OrderCreatedEvent](e)
+	if err != nil {
+		return err
 	}
+	fmt.Println("--- StockMovimentHandler ---")
+	for _, item := range payload.Items {
+		fmt.Printf("Retirando do stock %d itens do produto: %s\n", item.Quantity, item.ProductName)
+	}
+	return nil
 }
