@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/application/dto"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/entity"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/queue"
+	"github.com/NiltonMorais/event-driven-golang/internal/order/application/dto"
+	"github.com/NiltonMorais/event-driven-golang/internal/order/domain/entity"
+	"github.com/NiltonMorais/event-driven-golang/internal/order/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/internal/order/domain/queue"
 )
 
 type CreateOrderUseCase struct {

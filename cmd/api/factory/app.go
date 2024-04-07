@@ -7,33 +7,35 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/application/controller"
-	"github.com/NiltonMorais/event-driven-golang/internal/application/usecase"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/queue"
-	infraQueue "github.com/NiltonMorais/event-driven-golang/internal/infra/queue"
+	orderController "github.com/NiltonMorais/event-driven-golang/internal/order/application/controller"
+	orderUsecase "github.com/NiltonMorais/event-driven-golang/internal/order/application/usecase"
+	orderEvent "github.com/NiltonMorais/event-driven-golang/internal/order/domain/event"
+	userController "github.com/NiltonMorais/event-driven-golang/internal/user/application/controller"
+	userUsecase "github.com/NiltonMorais/event-driven-golang/internal/user/application/usecase"
+	userEvent "github.com/NiltonMorais/event-driven-golang/internal/user/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/pkg/queue"
 )
 
 type Application struct {
 	queue           queue.Queue
-	userController  *controller.UserController
-	orderController *controller.OrderController
+	userController  *userController.UserController
+	orderController *orderController.OrderController
 }
 
 func NewApplication() (*Application, error) {
-	// queue := infraQueue.NewMemoryQueueAdapter()
+	// queue := queue.NewMemoryQueueAdapter()
 	queueUri := os.Getenv("QUEUE_URI")
-	queue := infraQueue.NewRabbitMQAdapter(queueUri)
+	queue := queue.NewRabbitMQAdapter(queueUri)
 
-	createUserUseCase := usecase.NewCreateUserUseCase(queue)
-	sendWelcomeEmailUseCase := usecase.NewSendWelcomeEmailUseCase(queue)
-	userController := controller.NewUserController(createUserUseCase, sendWelcomeEmailUseCase)
+	createUserUseCase := userUsecase.NewCreateUserUseCase(queue)
+	sendWelcomeEmailUseCase := userUsecase.NewSendWelcomeEmailUseCase(queue)
+	userController := userController.NewUserController(createUserUseCase, sendWelcomeEmailUseCase)
 
-	createOrderUseCase := usecase.NewCreateOrderUseCase(queue)
-	processOrderPaymentUseCase := usecase.NewProcessOrderPaymentUseCase()
-	stockMovementUseCase := usecase.NewStockMovementUseCase()
-	sendOrderEmailUseCase := usecase.NewSendOrderEmailUseCase()
-	orderController := controller.NewOrderController(createOrderUseCase, processOrderPaymentUseCase, stockMovementUseCase, sendOrderEmailUseCase)
+	createOrderUseCase := orderUsecase.NewCreateOrderUseCase(queue)
+	processOrderPaymentUseCase := orderUsecase.NewProcessOrderPaymentUseCase()
+	stockMovementUseCase := orderUsecase.NewStockMovementUseCase()
+	sendOrderEmailUseCase := orderUsecase.NewSendOrderEmailUseCase()
+	orderController := orderController.NewOrderController(createOrderUseCase, processOrderPaymentUseCase, stockMovementUseCase, sendOrderEmailUseCase)
 
 	return &Application{
 		queue:           queue,
@@ -62,8 +64,8 @@ func (app *Application) StartConsumingQueues(ctx context.Context) error {
 		return err
 	}
 
-	OrderCreatedEvent := reflect.TypeOf(event.OrderCreatedEvent{}).Name()
-	UserRegisteredEvent := reflect.TypeOf(event.UserRegisteredEvent{}).Name()
+	OrderCreatedEvent := reflect.TypeOf(orderEvent.OrderCreatedEvent{}).Name()
+	UserRegisteredEvent := reflect.TypeOf(userEvent.UserRegisteredEvent{}).Name()
 
 	go func(ctx context.Context, queueName string) {
 		err = app.queue.StartConsuming(ctx, queueName)

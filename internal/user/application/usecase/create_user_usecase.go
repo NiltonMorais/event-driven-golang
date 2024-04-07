@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/entity"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/queue"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/domain/entity"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/domain/queue"
 )
 
 type CreateUserUseCase struct {

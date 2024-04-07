@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/queue"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/domain/queue"
 )
 
 type SendWelcomeEmailUseCase struct {

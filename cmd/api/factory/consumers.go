@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/internal/order/domain/event"
 )
 
 func RegisterConsumers(app *Application) {

@@ -1,6 +1,6 @@
 package event
 
-import "github.com/NiltonMorais/event-driven-golang/internal/domain/entity"
+import "github.com/NiltonMorais/event-driven-golang/internal/order/domain/entity"
 
 type OrderCreatedEvent struct {
 	Id         string

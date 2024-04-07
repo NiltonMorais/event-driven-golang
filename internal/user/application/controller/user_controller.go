@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/application/dto"
-	"github.com/NiltonMorais/event-driven-golang/internal/application/usecase"
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/application/dto"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/application/usecase"
+	"github.com/NiltonMorais/event-driven-golang/internal/user/domain/event"
 )
 
 type UserController struct {

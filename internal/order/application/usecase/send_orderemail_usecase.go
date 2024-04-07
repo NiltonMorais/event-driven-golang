@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/domain/event"
+	"github.com/NiltonMorais/event-driven-golang/internal/order/domain/event"
 )
 
 type SendOrderEmailUseCase struct {
