@@ -84,7 +84,7 @@ func (r *RabbitMQAdapter) Publish(ctx context.Context, eventPayload interface{})
 	if err != nil {
 		return err
 	}
-	log.Printf(" [x] Sent %s\n", eventJson)
+	log.Printf(" [x] Sent to queue %s: %s\n", eventName, eventJson)
 	return nil
 }
 

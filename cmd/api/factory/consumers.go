@@ -4,15 +4,16 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/NiltonMorais/event-driven-golang/internal/order/domain/event"
+	orderEvent "github.com/NiltonMorais/event-driven-golang/internal/order/domain/event"
+	userEvent "github.com/NiltonMorais/event-driven-golang/internal/user/domain/event"
 )
 
 func RegisterConsumers(app *Application) {
 	var list map[reflect.Type][]func(w http.ResponseWriter, r *http.Request) = map[reflect.Type][]func(w http.ResponseWriter, r *http.Request){
-		reflect.TypeOf(event.UserRegisteredEvent{}): {
+		reflect.TypeOf(userEvent.UserRegisteredEvent{}): {
 			app.userController.SendWelcomeEmail,
 		},
-		reflect.TypeOf(event.OrderCreatedEvent{}): {
+		reflect.TypeOf(orderEvent.OrderCreatedEvent{}): {
 			app.orderController.ProcessOrderPayment,
 			app.orderController.StockMovement,
 			app.orderController.SendOrderEmail,

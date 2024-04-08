@@ -32,7 +32,7 @@ func NewApplication() (*Application, error) {
 	userController := userController.NewUserController(createUserUseCase, sendWelcomeEmailUseCase)
 
 	createOrderUseCase := orderUsecase.NewCreateOrderUseCase(queue)
-	processOrderPaymentUseCase := orderUsecase.NewProcessOrderPaymentUseCase()
+	processOrderPaymentUseCase := orderUsecase.NewProcessOrderPaymentUseCase(queue)
 	stockMovementUseCase := orderUsecase.NewStockMovementUseCase()
 	sendOrderEmailUseCase := orderUsecase.NewSendOrderEmailUseCase()
 	orderController := orderController.NewOrderController(createOrderUseCase, processOrderPaymentUseCase, stockMovementUseCase, sendOrderEmailUseCase)

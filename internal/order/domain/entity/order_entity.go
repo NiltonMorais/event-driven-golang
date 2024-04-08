@@ -1,9 +1,14 @@
 package entity
 
-import "github.com/google/uuid"
+import (
+	"errors"
+
+	"github.com/google/uuid"
+)
 
 const (
 	OrderStatusPending = "pending"
+	OrderStatusPaid    = "paid"
 )
 
 type OrderEntity struct {
@@ -11,6 +16,7 @@ type OrderEntity struct {
 	status     string
 	items      []*OrderItemEntity
 	totalPrice float64
+	paidValue  float64
 }
 
 func NewOrderEntity() (*OrderEntity, error) {
@@ -20,9 +26,25 @@ func NewOrderEntity() (*OrderEntity, error) {
 	}, nil
 }
 
+func RestoreOrderEntity(id, status string) (*OrderEntity, error) {
+	return &OrderEntity{
+		id:     id,
+		status: status,
+	}, nil
+}
+
 func (o *OrderEntity) AddItem(item *OrderItemEntity) {
 	o.items = append(o.items, item)
 	o.totalPrice += item.GetTotalPrice()
+}
+
+func (o *OrderEntity) Pay(value float64) error {
+	if value < o.totalPrice {
+		return errors.New("value is less than the total price")
+	}
+	o.paidValue = value
+	o.status = OrderStatusPaid
+	return nil
 }
 
 func (o *OrderEntity) GetItems() []*OrderItemEntity {
