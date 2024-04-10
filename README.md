@@ -1,5 +1,6 @@
 # event-driven-golang
 Event Driven Architecture example in golang
+![events diagram](https://github.com/NiltonMorais/event-driven-golang/blob/main/docs/events_diagram.png?raw=true)
 
 ## Running local
 - run server
